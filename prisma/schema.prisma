@@ -11,10 +11,10 @@ datasource db {
 }
 
 model todo {
-  id        String   @id @default(uuid())
-  title     String
-  content   String
-  done      Boolean
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  done        Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

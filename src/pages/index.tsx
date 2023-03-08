@@ -1,20 +1,34 @@
-import AddNewModal from '@/components/AddNewModal';
-import Card from '@/components/Card';
-import Navbar from '@/components/Navbar';
-import { TodoInput } from '@/utils/types';
 import Head from 'next/head';
+import { GetServerSideProps } from 'next';
 import { useState } from 'react';
-import todos from '@/lib/data/todos.json';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
+import AddNewModal from '@/components/AddNewModal';
+import Navbar from '@/components/Navbar';
+import Card from '@/components/Card';
+import { TodoInput, TodosData } from '@/utils/types';
 
-interface TodosData {
-  id: number;
-  title: string;
-  description: string;
-  done: boolean;
-}
+const getTodos = async () => {
+  const res = await fetch('http://localhost:3000/api/todos');
+  if (!res.ok) {
+    console.log('Somthing went wrong');
+  }
+  return res.json();
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery('getTodos', getTodos);
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient)
+    }
+  };
+};
 
 export default function Home() {
-  const [todosData, setTodosData] = useState<TodosData[] | []>(todos);
+  // const [todosData, setTodosData] = useState<TodosData[] | []>(todos);
+  const { data: todosData } = useQuery<TodosData[]>('getTodos', getTodos);
+
   const [addNewTodoModal, setAddNewTodoModal] = useState(false);
 
   return (
@@ -32,7 +46,13 @@ export default function Home() {
             addNewTodoModal && 'blur-sm'
           }`}
         >
-          {todosData.length !== 0 ? (
+          {!todosData ? (
+            <div className="fixed top-0 flex h-screen items-center">
+              <p className="text-3xl text-white opacity-60">
+                You can add new todos with the "Add New" button above.
+              </p>
+            </div>
+          ) : todosData.length !== 0 ? (
             todosData.map((todo) => (
               <Card
                 key={todo.id}
@@ -43,7 +63,7 @@ export default function Home() {
             ))
           ) : (
             <div className="fixed top-0 flex h-screen items-center">
-              <p className="text-3xl text-white opacity-60">
+              <p className="text-center text-3xl text-white opacity-60">
                 You can add new todos with the "Add New" button above.
               </p>
             </div>
