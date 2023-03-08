@@ -35,6 +35,7 @@ export default function Home() {
           {todosData.length !== 0 ? (
             todosData.map((todo) => (
               <Card
+                key={todo.id}
                 title={todo.title}
                 description={todo.description}
                 checked={todo.done}
