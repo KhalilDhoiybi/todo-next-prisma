@@ -18,21 +18,22 @@ export default async function handler(
       });
       return res.status(200).json(todos);
     } catch (error) {
-      return res.status(400).json({ error });
+      return res.status(400).json({ message: 'Something went wrong' });
     }
-  }
-  if (req.method === 'POST') {
+  } else if (req.method === 'POST') {
     const { title, description }: TodoInput = JSON.parse(req.body);
     try {
-      const todo = await prisma.todo.create({
+      await prisma.todo.create({
         data: {
           title,
           description
         }
       });
-      return res.status(200).json(todo);
+      return res.status(200).json({ message: 'Todo added!' });
     } catch (error) {
-      return res.status(400).json({ error });
+      return res.status(400).json({ message: 'Something went wrong' });
     }
+  } else {
+    res.status(400).json({ message: 'Method not supported' });
   }
 }

@@ -6,13 +6,21 @@ import AddNewModal from '@/components/AddNewModal';
 import Navbar from '@/components/Navbar';
 import Card from '@/components/Card';
 import { TodoInput, TodosData } from '@/utils/types';
+import toast from 'react-hot-toast';
 
 const getTodos = async () => {
-  const res = await fetch('http://localhost:3000/api/todos');
-  if (!res.ok) {
-    console.log('Somthing went wrong');
+  try {
+    const res = await fetch('./api/todos');
+    if (!res.ok) {
+      console.log('Somthing went wrong');
+    }
+    if (!res.ok) {
+      throw new Error('Something went wrong');
+    }
+    return res.json();
+  } catch (error) {
+    throw new Error('Something went wrong');
   }
-  return res.json();
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
@@ -70,9 +78,8 @@ export default function Home() {
         <AddNewModal
           isOpen={addNewTodoModal}
           onClose={() => setAddNewTodoModal(false)}
-          onAddTodoSuccess={(data: TodoInput) => {
-            setAddNewTodoModal(false);
-            console.log(data);
+          onAddTodoError={(err) => {
+            toast.error(err);
           }}
         />
       </main>

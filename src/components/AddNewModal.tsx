@@ -1,19 +1,16 @@
 import { TodoInput } from '@/utils/types';
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 import { useForm } from 'react-hook-form';
+import { useMutation, useQueryClient } from 'react-query';
 import PopOutModal from './PopOutModal';
 
 interface AddNewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddTodoSuccess: (data: TodoInput) => void;
+  onAddTodoError: (err: string) => void;
 }
 
-const AddNewModal = ({
-  isOpen,
-  onClose,
-  onAddTodoSuccess
-}: AddNewModalProps) => {
+const AddNewModal = ({ isOpen, onClose, onAddTodoError }: AddNewModalProps) => {
   const {
     register,
     handleSubmit,
@@ -21,24 +18,46 @@ const AddNewModal = ({
     formState: { errors }
   } = useForm<TodoInput>();
 
+  const queryClient = useQueryClient();
+
+  const addTodoMutation = useMutation(
+    'addTodo',
+    async ({ title, description }: TodoInput) => {
+      try {
+        const res = await fetch('./api/todos', {
+          method: 'POST',
+          body: JSON.stringify({ title, description })
+        });
+        if (!res.ok) {
+          throw new Error('Something went wrong');
+        }
+        return await res.json();
+      } catch (error) {
+        throw new Error('Something went wrong');
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('getTodos');
+        reset({
+          title: '',
+          description: ''
+        });
+        onClose();
+      },
+      onError: (err: { message: string }) => onAddTodoError(err.message)
+    }
+  );
+
   return (
     <PopOutModal modalTitle="Add New Todo" isOpen={isOpen} onClose={onClose}>
-      <form
-        onSubmit={handleSubmit((data) => {
-          // TODO: The line below should be moved to react query mutation and call AddNew mutation here
-          onAddTodoSuccess(data);
-          reset({
-            title: '',
-            description: ''
-          });
-        })}
-      >
+      <form onSubmit={handleSubmit((data) => addTodoMutation.mutate(data))}>
         <div className="flex flex-col px-6">
           <input
             className="rounded-md border border-titleLight py-2 px-3 font-sans text-lg text-titleLight outline-2 outline-offset-0 outline-titleLight focus:border-white focus:outline"
             type="text"
             id="todoTitle"
-            placeholder="Title"
+            placeholder="Title."
             {...register('title', { required: true })}
           />
           <span className="flex h-8 items-center space-x-1 py-1 text-sm text-titleLight">
@@ -54,7 +73,7 @@ const AddNewModal = ({
             id="todoContent"
             cols={30}
             rows={10}
-            placeholder="Description"
+            placeholder="Description can be empty."
             {...register('description')}
           />
           <div className="py-1"></div>
