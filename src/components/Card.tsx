@@ -13,7 +13,11 @@ interface CardProps {
 const Card = ({ title, description, checked }: CardProps) => {
   return (
     <div className="m-3 max-w-sm rounded-md border border-white">
-      <div className="flex items-center justify-between space-x-2 border-b p-4">
+      <div
+        className={`flex items-center justify-between space-x-2 p-4 ${
+          description !== '' && 'border-b'
+        }`}
+      >
         <h2
           className={`prose text-2xl text-titleLight ${
             checked && 'line-through decoration-2'
@@ -30,15 +34,18 @@ const Card = ({ title, description, checked }: CardProps) => {
           <CardDropDown />
         </div>
       </div>
-      <div className="p-4">
-        <p
-          className={`prose font-serif text-xl text-white ${
-            checked && 'line-through decoration-2'
-          }`}
-        >
-          {description}
-        </p>
-      </div>
+
+      {description != '' && (
+        <div className="p-4">
+          <p
+            className={`prose font-serif text-xl text-white ${
+              checked && 'line-through decoration-2'
+            }`}
+          >
+            {description}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

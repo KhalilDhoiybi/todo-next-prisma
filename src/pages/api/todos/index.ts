@@ -1,10 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/database';
-import { TodosData } from '@/utils/types';
-
-type Data = {
-  name: string;
-};
+import { TodoInput, TodosData } from '@/utils/types';
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,7 +18,21 @@ export default async function handler(
       });
       return res.status(200).json(todos);
     } catch (error) {
-      return res.status(200).json({ error });
+      return res.status(400).json({ error });
+    }
+  }
+  if (req.method === 'POST') {
+    const { title, description }: TodoInput = JSON.parse(req.body);
+    try {
+      const todo = await prisma.todo.create({
+        data: {
+          title,
+          description
+        }
+      });
+      return res.status(200).json(todo);
+    } catch (error) {
+      return res.status(400).json({ error });
     }
   }
 }

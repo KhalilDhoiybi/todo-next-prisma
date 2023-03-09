@@ -26,9 +26,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 export default function Home() {
-  // const [todosData, setTodosData] = useState<TodosData[] | []>(todos);
   const { data: todosData } = useQuery<TodosData[]>('getTodos', getTodos);
-
   const [addNewTodoModal, setAddNewTodoModal] = useState(false);
 
   return (
@@ -42,7 +40,7 @@ export default function Home() {
       <main>
         <Navbar onOpen={() => setAddNewTodoModal(true)} />
         <div
-          className={`space relative top-24 mx-auto flex flex-wrap justify-center p-6 md:w-4/6 ${
+          className={`space relative top-24 mx-auto flex flex-wrap items-start justify-center p-6 md:w-4/6 ${
             addNewTodoModal && 'blur-sm'
           }`}
         >
