@@ -7,7 +7,7 @@ interface NavbarProps {
 const Navbar = ({ onOpen }: NavbarProps) => {
   return (
     <nav className="fixed top-0 z-50 w-full bg-white py-4 px-10 md:px-24">
-      <div className="flex content-center items-center justify-between">
+      <div className="flex content-center justify-between">
         <h1 className="text-5xl font-extrabold text-titleLight">Todos.</h1>
         <button
           className="rounded-md bg-titleLight px-5 py-2 text-white hover:bg-titleLightHover"

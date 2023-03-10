@@ -5,20 +5,18 @@ import { dehydrate, QueryClient, useQuery } from 'react-query';
 import AddNewModal from '@/components/AddNewModal';
 import Navbar from '@/components/Navbar';
 import Card from '@/components/Card';
-import { TodoInput, TodosData } from '@/utils/types';
+import { TodosData } from '@/utils/types';
 import toast from 'react-hot-toast';
 
 const getTodos = async () => {
   try {
-    const res = await fetch('./api/todos');
-    if (!res.ok) {
-      console.log('Somthing went wrong');
-    }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_FETCH_URL}/api/todos`);
     if (!res.ok) {
       throw new Error('Something went wrong');
     }
-    return res.json();
+    return await res.json();
   } catch (error) {
+    console.log(error);
     throw new Error('Something went wrong');
   }
 };
