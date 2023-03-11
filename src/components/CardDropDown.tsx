@@ -7,7 +7,11 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { CardProps } from './Card';
 
-const CardDropDown = ({ todo, onOpenDeleteTodoModal }: CardProps) => {
+const CardDropDown = ({
+  todo,
+  onOpenDeleteTodoModal,
+  onUpdateTodo
+}: CardProps) => {
   return (
     <Menu as="div" className="relative flex justify-center text-left">
       <Menu.Button>
@@ -34,7 +38,10 @@ const CardDropDown = ({ todo, onOpenDeleteTodoModal }: CardProps) => {
           <Menu.Item>
             <div
               className="rounded-tr-lg rounded-br-lg p-4 hover:cursor-pointer hover:bg-slate-300"
-              onClick={onOpenDeleteTodoModal}
+              onClick={() => {
+                onUpdateTodo(todo);
+                onOpenDeleteTodoModal();
+              }}
             >
               <TrashIcon className="h-6 w-6 text-titleLight" />
             </div>

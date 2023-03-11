@@ -35,7 +35,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
 export default function Home() {
   const { data: todosData } = useQuery<TodosData[]>('getTodos', getTodos);
   const [addNewTodoModal, setAddNewTodoModal] = useState(false);
-  const [deleteTodoModal, setDeleteTodoModal] = useState(true);
+  const [deleteTodoModal, setDeleteTodoModal] = useState(false);
+  const [todoToUpdate, setTodoToUpdate] = useState<TodosData | null>(null);
 
   return (
     <>
@@ -64,6 +65,7 @@ export default function Home() {
                 key={todo.id}
                 todo={todo}
                 onOpenDeleteTodoModal={() => setDeleteTodoModal(true)}
+                onUpdateTodo={(todo: TodosData) => setTodoToUpdate(todo)}
               />
             ))
           ) : (
@@ -83,7 +85,14 @@ export default function Home() {
         />
         <DeleteModal
           isOpen={deleteTodoModal}
-          onClose={() => setDeleteTodoModal(false)}
+          onClose={() => {
+            setDeleteTodoModal(false);
+            setTodoToUpdate(null);
+          }}
+          onDeleteTodoError={(err) => {
+            toast.error(err);
+          }}
+          todoToUpdate={todoToUpdate}
         />
       </main>
     </>

@@ -8,9 +8,10 @@ import CardDropDown from './CardDropDown';
 export interface CardProps {
   todo: TodosData;
   onOpenDeleteTodoModal: () => void;
+  onUpdateTodo: (todo: TodosData) => void;
 }
 
-const Card = ({ todo, onOpenDeleteTodoModal }: CardProps) => {
+const Card = ({ todo, onOpenDeleteTodoModal, onUpdateTodo }: CardProps) => {
   const { title, description, done } = todo;
   return (
     <div className="m-3 max-w-sm rounded-md border border-white">
@@ -35,6 +36,7 @@ const Card = ({ todo, onOpenDeleteTodoModal }: CardProps) => {
           <CardDropDown
             todo={todo}
             onOpenDeleteTodoModal={onOpenDeleteTodoModal}
+            onUpdateTodo={onUpdateTodo}
           />
         </div>
       </div>
