@@ -1,3 +1,4 @@
+import { ModalType } from '@/utils/types';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { Fragment } from 'react';
@@ -6,6 +7,7 @@ interface PopOutModalProps {
   modalTitle: string;
   isOpen: boolean;
   onClose: () => void;
+  modalType: ModalType;
   children: React.ReactNode;
 }
 
@@ -13,7 +15,8 @@ const PopOutModal = ({
   modalTitle,
   children,
   isOpen,
-  onClose
+  onClose,
+  modalType
 }: PopOutModalProps) => {
   return (
     <>
@@ -48,7 +51,9 @@ const PopOutModal = ({
                         {modalTitle}
                       </h2>
                       <div
-                        className="flex rounded-sm p-1 hover:cursor-pointer hover:bg-slate-200"
+                        className={`flex rounded-sm p-1 hover:cursor-pointer hover:bg-slate-200 ${
+                          modalType === 'Delete' && 'hidden'
+                        }`}
                         onClick={onClose}
                       >
                         <XMarkIcon className="h-7 w-7 text-slate-700" />

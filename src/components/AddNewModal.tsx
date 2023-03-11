@@ -50,7 +50,12 @@ const AddNewModal = ({ isOpen, onClose, onAddTodoError }: AddNewModalProps) => {
   );
 
   return (
-    <PopOutModal modalTitle="Add New Todo" isOpen={isOpen} onClose={onClose}>
+    <PopOutModal
+      modalTitle="Add New Todo"
+      isOpen={isOpen}
+      onClose={onClose}
+      modalType="Add"
+    >
       <form onSubmit={handleSubmit((data) => addTodoMutation.mutate(data))}>
         <div className="flex flex-col px-6">
           <input

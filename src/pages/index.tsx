@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import Card from '@/components/Card';
 import { TodosData } from '@/utils/types';
 import toast from 'react-hot-toast';
+import DeleteModal from '@/components/DeleteModal';
 
 const getTodos = async () => {
   try {
@@ -34,6 +35,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 export default function Home() {
   const { data: todosData } = useQuery<TodosData[]>('getTodos', getTodos);
   const [addNewTodoModal, setAddNewTodoModal] = useState(false);
+  const [deleteTodoModal, setDeleteTodoModal] = useState(true);
 
   return (
     <>
@@ -44,7 +46,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Navbar onOpen={() => setAddNewTodoModal(true)} />
+        <Navbar onOpenAddNewTodoModal={() => setAddNewTodoModal(true)} />
         <div
           className={`space relative top-24 mx-auto flex flex-wrap items-start justify-center p-6 md:w-4/6 ${
             addNewTodoModal && 'blur-sm'
@@ -60,9 +62,8 @@ export default function Home() {
             todosData.map((todo) => (
               <Card
                 key={todo.id}
-                title={todo.title}
-                description={todo.description}
-                checked={todo.done}
+                todo={todo}
+                onOpenDeleteTodoModal={() => setDeleteTodoModal(true)}
               />
             ))
           ) : (
@@ -79,6 +80,10 @@ export default function Home() {
           onAddTodoError={(err) => {
             toast.error(err);
           }}
+        />
+        <DeleteModal
+          isOpen={deleteTodoModal}
+          onClose={() => setDeleteTodoModal(false)}
         />
       </main>
     </>

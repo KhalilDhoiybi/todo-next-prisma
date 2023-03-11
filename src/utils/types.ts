@@ -9,3 +9,5 @@ export interface TodosData {
   description: string;
   done: boolean;
 }
+
+export type ModalType = 'Add' | 'Delete' | 'Edit';
