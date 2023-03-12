@@ -10,6 +10,7 @@ import { CardProps } from './Card';
 const CardDropDown = ({
   todo,
   onOpenDeleteTodoModal,
+  onOpeneEditTodoModal,
   onUpdateTodo
 }: CardProps) => {
   return (
@@ -30,7 +31,10 @@ const CardDropDown = ({
           <Menu.Item>
             <div
               className="rounded-tl-lg rounded-bl-lg p-4 hover:cursor-pointer hover:bg-slate-300"
-              onClick={() => alert('Test from edit')}
+              onClick={() => {
+                onUpdateTodo(todo);
+                onOpeneEditTodoModal();
+              }}
             >
               <PencilSquareIcon className="h-6 w-6 text-blue-500" />
             </div>

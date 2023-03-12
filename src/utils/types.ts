@@ -1,4 +1,5 @@
 export type TodoInput = {
+  id?: string;
   title: string;
   description: string;
 };

@@ -6,8 +6,9 @@ import AddNewModal from '@/components/AddNewModal';
 import Navbar from '@/components/Navbar';
 import Card from '@/components/Card';
 import { TodosData } from '@/utils/types';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import DeleteModal from '@/components/DeleteModal';
+import EditModal from '@/components/EditModal';
 
 const getTodos = async () => {
   try {
@@ -36,6 +37,7 @@ export default function Home() {
   const { data: todosData } = useQuery<TodosData[]>('getTodos', getTodos);
   const [addNewTodoModal, setAddNewTodoModal] = useState(false);
   const [deleteTodoModal, setDeleteTodoModal] = useState(false);
+  const [editTodoModal, setEditTodoModal] = useState(false);
   const [todoToUpdate, setTodoToUpdate] = useState<TodosData | null>(null);
 
   return (
@@ -65,6 +67,7 @@ export default function Home() {
                 key={todo.id}
                 todo={todo}
                 onOpenDeleteTodoModal={() => setDeleteTodoModal(true)}
+                onOpeneEditTodoModal={() => setEditTodoModal(true)}
                 onUpdateTodo={(todo: TodosData) => setTodoToUpdate(todo)}
               />
             ))
@@ -94,6 +97,18 @@ export default function Home() {
           }}
           todoToUpdate={todoToUpdate}
         />
+        <EditModal
+          isOpen={editTodoModal}
+          onClose={() => {
+            setEditTodoModal(false);
+            setTodoToUpdate(null);
+          }}
+          onEditTodoError={(err) => {
+            toast.error(err);
+          }}
+          todoToUpdate={todoToUpdate}
+        />
+        <Toaster />
       </main>
     </>
   );
