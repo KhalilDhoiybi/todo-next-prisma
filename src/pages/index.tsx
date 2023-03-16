@@ -52,7 +52,7 @@ export default function Home() {
         <Navbar onOpenAddNewTodoModal={() => setAddNewTodoModal(true)} />
         <div
           className={`space relative top-24 mx-auto flex flex-wrap items-start justify-center p-6 md:w-4/6 ${
-            addNewTodoModal && 'blur-sm'
+            (addNewTodoModal || deleteTodoModal || editTodoModal) && 'blur-sm'
           }`}
         >
           {!todosData ? (
@@ -69,6 +69,9 @@ export default function Home() {
                 onOpenDeleteTodoModal={() => setDeleteTodoModal(true)}
                 onOpeneEditTodoModal={() => setEditTodoModal(true)}
                 onUpdateTodo={(todo: TodosData) => setTodoToUpdate(todo)}
+                onDoneTodoError={(err) => {
+                  toast.error(err);
+                }}
               />
             ))
           ) : (
